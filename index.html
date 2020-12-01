@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Let's chat!</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body>
+
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <div class="login_style" id="login_interface" style=" background-color: aliceblue; display: block;">
+        <h2>Username</h2>
+        <button id="ID_AA" value="AA" onclick="getUserID(this.value)">AA</button>
+        <button id="ID_BB" value="BB" onclick="getUserID(this.value)">BB</button>
+        <button id="ID_CC" value="CC" onclick="getUserID(this.value)">CC</button>
+    </div>
+
+
+    <div class="friend_list" id="friendlist">
+        <!-- <div class="friend_list"><span>好友列表</span></div> -->
+        <div class='fri_list' id="my_friend" style="display: none;">
+            <div class='image'>
+                <img src='images/arrow.jpg' width='640' height='640' alt='picture'>
+            </div>
+            <div class='message'>This is our friend list</div>
+        </div>
+
+        <!--/*fri_list*/ -->
+
+    </div>
+    <div class="chat_systerm" id="chatsysterm">
+        <div class="chat_con" id="chat_content">
+            <div class='send-box' id='send_box' style="display: none;">
+                <div class='image'>
+                    <img src='images/kefu2.jpg' width='640' height='640' alt='picture'>
+                </div>
+                <div class='message'>这里是客服</div>
+            </div>
+            <div class='msg-box' id='message_box' style=" display: none;">
+                <div class='image'>
+                    <img src='images/arrow.jpg' width='640' height='640' alt='picture'>
+                </div>
+                <div class='message'>这里是用户</div>
+
+            </div>
+            <!-- msg-box -->
+
+        </div>
+
+        <!-- chat_con -->
+        <div class="backgro">
+            <div class="button_list" id="buttonlist">
+                <button type="button" id="picture_btn">Picture</button>
+                <input type="file" id="findpicture" onchange="picture_send()" style="display: none;">
+                <!-- <button type="button" id="video_btn">Video</button> -->
+                <a href="javascript:;" class="video" id="video_btn">video</a>
+                <!-- 替换了上面一句 -->
+                <button type="button" id="file_btn">File</button>
+                <input type="file" id="findFile" onchange="read_and_sendfile()" style="display: none;">
+            </div>
+            <!-- button_list -->
+        </div>
+        <textarea rows="3" cols="20" id="data_input"></textarea>
+        <button class="btn-send" type="button" id='send-btn'>SEND</button>
+    </div>
+    <div class="hiddenarea" id="hiddenarea">
+        <button id="hiddenact">Calling</button>
+    </div>
+    <div class="freceive" id="freceive">
+        <div>
+            <div class='uname' id="uname">这里是用户名</div>
+            <h1>正在向你发送文件</h1>
+            <div class='fname' id="fname">这里是文件名</div>
+            <button id="recbtn">Receive</button>
+            <button id="rejbtn">cancel</button>
+        </div>
+
+    </div>
+
+
+
+    <div class='mydialog' id='mydialog'>
+        <video id="localVideo" autoplay playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+        <div>
+
+            <button id="hangupButton">Hang Up</button>
+        </div>
+
+    </div>
+
+
+    <button id="hidebutton">x</button>
+
+
+
+    <script src="js/Chat_system.js"></script>
+    <!-- <script src="js/GroupChat.js"></script> -->
+</body>
+
+</html>

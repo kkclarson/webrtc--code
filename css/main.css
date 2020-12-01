@@ -1,0 +1,542 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#friendlist,
+#chatsysterm {
+    float: left;
+    width: 74%;
+    /* width: auto; */
+}
+
+button:hover {
+    background: #adb1aa;
+}
+
+
+/* 鼠标放上之后的特效 */
+
+button,
+textarea:focus {
+    /*去除选中点击框和防止文字移动*/
+    outline: none;
+    border: 1px solid #ccc;
+    /*根据textarea背景颜色来定*/
+}
+
+#login_interface {
+    /*登录页面*/
+    position: absolute;
+    /*定位方式绝对定位absolute*/
+    top: 50%;
+    left: 50%;
+    /*顶和高同时设置50%实现的是同时水平垂直居中效果*/
+    transform: translate(-50%, -50%);
+    /*实现块元素百分比下居中*/
+    width: 450px;
+    padding: 50px;
+    background: rgba(0, 0, 0, .8);
+    /*背景颜色为黑色，透明度为0.8*/
+    box-sizing: border-box;
+    /*box-sizing设置盒子模型的解析模式为怪异盒模型，
+        将border和padding划归到width范围内*/
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, .5);
+    /*边框阴影  水平阴影0 垂直阴影15px 模糊25px 颜色黑色透明度0.5*/
+    border-radius: 15px;
+    /*边框圆角，四个角均为15px*/
+}
+
+#login_interface h2 {
+    /*username*/
+    margin: 0 0 30px;
+    padding: 0;
+    color: #607394;
+    text-align: center;
+}
+
+#ID_AA {
+    /*用户名按钮*/
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    background: #03a9f4;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#ID_BB {
+    /*用户名按钮*/
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    background: #03a9f4;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#ID_CC {
+    /*用户名按钮*/
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    background: #03a9f4;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.chat_systerm {
+    /*整个右边聊天 */
+    width: 74%;
+    height: 100%;
+    margin: 0px auto;
+}
+
+#friendlist {
+    /*好友列表部分 */
+    width: 26%;
+    /* max-width: 300px; */
+    height: 100%;
+    left: 9px;
+    margin: 0px auto;
+    overflow-y: scroll;
+    background: #eaebe9;
+}
+
+.fri_list {
+    /*每个好友 */
+    height: 60px;
+    width: 100%;
+    max-height: 60px;
+}
+
+.fri_list:hover {
+    background: #d1d4cf;
+}
+
+.fri_list .image {
+    /*存放好友头像的框 */
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin: 10px 10px;
+    box-shadow: 0 0 4px #222;
+    border-radius: 6px;
+}
+
+.fri_list .image img {
+    /*头像 */
+    display: block;
+    width: 40px;
+    height: 40px;
+}
+
+.fri_list .message {
+    float: left;
+    max-width: 70%;
+    margin-top: 10px;
+    padding: 10px;
+    word-break: break-all;
+    color: #666;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat_con {
+    /*整个消息显示页面 */
+    height: 70%;
+    left: 170px;
+    margin: 0px 0px;
+    padding: 10px;
+    border: 1px solid;
+    border-color: transparent transparent #b8b7b7 transparent;
+    /* overflow-y: scroll; */
+    overflow: auto;
+    background: #f3f3f2ad;
+}
+
+.chat_con .msg-box {
+    /*聊天消息框*/
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+}
+
+.chat_con .msg-box .image {
+    /*存放头像的框*/
+    float: left;
+    width: 45px;
+    height: 45px;
+    margin: 0px 0px;
+    box-shadow: 0 0 4px #222;
+    border-radius: 6px;
+}
+
+.chat_con .msg-box .image img {
+    /*头像*/
+    display: block;
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    /*圆角*/
+}
+
+.chat_con .msg-box .message {
+    /*消息文字*/
+    position: relative;
+    float: left;
+    max-width: 79%;
+    /* min-height: 60px; */
+    margin-left: 20px;
+    padding: 10px;
+    word-break: break-all;
+    background: #9eea6a;
+    color: #666;
+    border-radius: 10px 6px 10px 10px;
+}
+
+.chat_con .msg-box .message:hover {
+    /*消息框的鼠标响应事件 */
+    background: #8cdc56;
+}
+
+.chat_con .msg-box .message::after {
+    /*消息文字格式*/
+    position: absolute;
+    top: 8px;
+    /*距离参考物顶端的距离*/
+    left: -22px;
+    /*距离左边的距离*/
+    content: '';
+    display: block;
+    width: 0px;
+    height: 0px;
+    border: solid 12px;
+    border-color: transparent #9eea6a transparent transparent;
+}
+
+.chat_con .send-box {
+    /*发送端聊天消息框*/
+    /* display: contents; */
+    position: relative;
+    width: 100%;
+    min-height: 60px;
+    float: right;
+    padding: 8px;
+}
+
+.chat_con .send-box .image {
+    /*存放头像的框*/
+    float: right;
+    width: 45px;
+    height: 45px;
+    margin: 0px 0px;
+    box-shadow: 0 0 4px #222;
+    border-radius: 6px;
+}
+
+.chat_con .send-box .image img {
+    /*头像*/
+    display: block;
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    /*圆角*/
+}
+
+.chat_con .send-box .message {
+    /*消息文字*/
+    position: relative;
+    float: right;
+    max-width: 79%;
+    margin-right: 20px;
+    padding: 10px;
+    word-break: break-all;
+    /* 英文换行 */
+    background: #9eea6a;
+    color: #666;
+    border-radius: 10px 6px 10px 10px;
+}
+
+.chat_con .send-box .message:hover {
+    background: #8cdc56;
+}
+
+.chat_con .send-box .message::after {
+    /*消息文字格式*/
+    position: absolute;
+    top: 8px;
+    /*距离参考物顶端的距离*/
+    right: -22px;
+    /*距离左边的距离*/
+    content: '';
+    display: block;
+    width: 0px;
+    height: 0px;
+    border: solid 12px;
+    border-color: transparent transparent transparent #9eea6a;
+}
+
+#data_input {
+    /* 消息输入框 */
+    width: 100%;
+    height: 21%;
+    font-size: 14px;
+    font-family: "Microsoft soft";
+    border-color: transparent transparent transparent;
+}
+
+.chat_systerm .btn-send {
+    /*消息发送按钮*/
+    float: right;
+    width: 100px;
+    height: 4%;
+    margin: 0px 37px 0px auto;
+    border: solid 1px;
+    border-color: transparent transparent transparent transparent;
+    border-radius: 6px;
+    /*圆角*/
+}
+
+.backgro {
+    background: #f3f3f2ad;
+}
+
+#buttonlist {
+    /*视频文件等按钮列表 */
+    float: right;
+    width: 200px;
+    height: 4%;
+}
+
+#buttonlist #video_btn {
+    /*Video按钮 */
+    width: 50px;
+    height: 25px;
+    margin-top: 3px;
+    border-color: transparent transparent transparent transparent;
+    border-radius: 6px;
+    /*圆角*/
+    font-size: 14px;
+    display: inline-block;
+    background-color: #efefef;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    transition-duration: 0.2s;
+    transition-property: background-color;
+    transition-timing-function: ease;
+    text-align: center;
+    padding: 1px;
+}
+
+.button_list #file_btn {
+    /*File按钮 */
+    width: 50px;
+    height: 25px;
+    margin-top: 3px;
+    border-color: transparent transparent transparent transparent;
+    border-radius: 6px;
+    /*圆角*/
+    font-size: 14px;
+    display: inline-block;
+    background-color: #efefef;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    transition-duration: 0.2s;
+    transition-property: background-color;
+    transition-timing-function: ease;
+    text-align: center;
+    padding: 1px;
+    /*圆角*/
+}
+
+.button_list #picture_btn {
+    /*Picture按钮 */
+    width: 50px;
+    height: 25px;
+    margin-top: 3px;
+    border-color: transparent transparent transparent transparent;
+    border-radius: 6px;
+    /*圆角*/
+    font-size: 14px;
+    display: inline-block;
+    background-color: #efefef;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    transition-duration: 0.2s;
+    transition-property: background-color;
+    transition-timing-function: ease;
+    text-align: center;
+    padding: 1px;
+}
+
+#mydialog {
+    /*弹出视频的整个页面 */
+    position: fixed;
+    right: 22%;
+    top: 50%;
+    height: 600px;
+    width: 900px;
+    transform: translate(0, -50%);
+    box-shadow: 0 0 3px 1px rgba(180, 180, 180, 0.5);
+    background-color: #efefef;
+    display: none;
+}
+
+video {
+    /*视频的页面 */
+    height: 550px;
+    width: 450px;
+    background: #efefef;
+    float: left;
+    margin-bottom: 4px;
+}
+
+#mydialog #hangupButton {
+    /*hangup按钮 */
+    height: 45px;
+    width: 45px;
+    font-size: 4px;
+    color: white;
+    /* float: right; */
+    margin-left: 47%;
+    text-align: center;
+    background: #f35858;
+    display: block;
+    padding-top: 7px;
+    border-radius: 100px;
+    border-color: transparent transparent transparent transparent;
+}
+
+#hidebutton {
+    /*”x“按钮 */
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+    color: black;
+    text-align: center;
+    border-color: transparent transparent transparent transparent;
+    padding: 0px;
+    line-height: 0px;
+}
+
+#hiddenarea {
+    /*隐藏之后的进口*/
+    position: fixed;
+    right: 0%;
+    top: 66.5%;
+    height: 45px;
+    width: 45px;
+    transform: translate(0, -50%);
+    box-shadow: 0 0 3px 1px rgba(180, 180, 180, 0.5);
+    background-color: #f1afaf;
+    border-radius: 100px;
+    display: none;
+}
+
+#hiddenarea #hiddenact {
+    /*隐藏之后的进口*/
+    height: 45px;
+    width: 45px;
+    border-radius: 100px;
+    padding-left: 0px;
+    background: #8cdc56;
+    color: white;
+    border-color: #8cdc56 #8cdc56 #8cdc56 #8cdc56;
+}
+
+#freceive {
+    /*判断文件接受的界面*/
+    position: fixed;
+    right: 30%;
+    top: 30%;
+    height: 145px;
+    width: 250px;
+    transform: translate(0, -50%);
+    box-shadow: 0 0 3px 1px rgba(180, 180, 180, 0.5);
+    background-color: white;
+    border-radius: 6px;
+    display: none;
+    /*现在是隐藏的，等用到的时候就把他改为block就行了*/
+}
+
+.uname {
+    /*文件接受页面用户名显示*/
+    margin-top: 3px;
+    height: 40px;
+    font-size: 22px;
+    font-family: "Microsoft soft";
+    text-align: center;
+}
+
+#freceive h1 {
+    height: 30px;
+    font-size: 13px;
+    font-family: "Microsoft soft";
+    font-weight: 100;
+    margin-left: 3px;
+}
+
+.fname {
+    /*文件接受页面文件名显示*/
+    height: 40px;
+    font-size: 16px;
+    font-family: "Microsoft soft";
+    margin-left: 15px;
+}
+
+#recbtn {
+    /*文件接受按钮*/
+    width: 62px;
+    height: 25px;
+    margin-left: 40px;
+    border-radius: 6px;
+}
+
+#rejbtn {
+    /*文件拒绝按钮*/
+    width: 62px;
+    height: 25px;
+    margin-left: 35px;
+    border-radius: 6px;
+}
+
+@media only screen and (max-width:850px) {
+    .chat_con .msg-box .message {
+        width: 67%;
+    }
+    .chat_con .send-box .message {
+        width: 67%;
+    }
+    .fri_list .message {
+        width: 60%;
+    }
+    @media only screen and (max-width:640px) {
+        .fri_list .message {
+            width: 40%;
+        }
+    }
+}
