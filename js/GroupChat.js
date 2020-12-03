@@ -26,6 +26,7 @@ var name_input = "";
 var add_interface = document.getElementById('add_interface').innerHTML;
 var newFriendName = "";
 var newFriendId = "";
+var messageTable = new Array();
 
 var pc;
 var callerID;
