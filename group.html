@@ -10,24 +10,31 @@
 <body>
 
     <script src="node_modules/jquery/dist/jquery.js"></script>
+
     <div class="login_style" id="login_interface" style=" background-color: aliceblue;">
         <!-- 登录页面 -->
         <h2>Username</h2>
-        <button id="ID_AA" value="AA" onclick="getUserID(this.value)">AA</button>
+        <!-- <button id="ID_AA" value="AA" onclick="getUserID(this.value)">AA</button>
         <button id="ID_BB" value="BB" onclick="getUserID(this.value)">BB</button>
         <button id="ID_CC" value="CC" onclick="getUserID(this.value)">CC</button>
         <button id="ID_A" class="Username" value="A" onclick="getUserID(this.value)">A</button>
         <button id="ID_B" class="Username" value="B" onclick="getUserID(this.value)">B</button>
-        <button id="ID_C" class="Username" value="C" onclick="getUserID(this.value)">C</button>
+        <button id="ID_C" class="Username" value="C" onclick="getUserID(this.value)">C</button> -->
+        <!-- <input type="text" value="Please input your logon id!" id="UserName_Input"> -->
+        <input type="text" id="UserName_Input" style="color:#999;width: 40%; float:left " value="请输入用户名" onfocus="if(this.value=='请输入用户名'){this.value='';this.style.color='#424242'}" onblur="if(this.value==''){this.value='请输入用户名';this.style.color='#999'}" />
+        <button id="loginButton" value="Login" onclick="checkID('UserName_Input','friend_btn','group_btn')">Login</button>
     </div>
 
-
+    <div class="choose_list" id="chooselist">
+        <button type="button" id="friend_btn" onclick="showFriends('friend_btn','group_btn')">Friend</button>
+        <button type="button" id="group_btn" onclick="showGroup('friend_btn','group_btn')">Group</button>
+    </div>
     <div class="friend_list" id="friendlist">
         <!-- 好友列表 -->
-        <div class="choose_list" id="chooselist">
-            <button type="button" id="friend_btn" onclick="showFriends()">Friend</button>
-            <button type="button" id="group_btn" onclick="showGroup()">Group</button>
-        </div>
+        <!-- <div class="choose_list" id="chooselist">
+            <button type="button" id="friend_btn" onclick="showFriends('friend_btn','group_btn')">Friend</button>
+            <button type="button" id="group_btn" onclick="showGroup('friend_btn','group_btn')">Group</button>
+        </div> -->
         <div class='fri_list' id="my_friend" style="display: none;">
             <div class='image'>
                 <img src='images/arrow.jpg' width='640' height='640' alt='picture'>
@@ -217,6 +224,7 @@
     <!-- <script src="js/Chat_system.js"></script> -->
     <script src="js/GroupChat.js"></script>
     <!-- <script src="js/GroupChat.js"></script> -->
+
 </body>
 
 </html>

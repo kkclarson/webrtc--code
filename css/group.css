@@ -128,7 +128,7 @@ textarea:focus {
     left: 9px;
     margin: 0px auto;
     overflow-y: scroll;
-    background: #eaebe9;
+    background: #f7f8f6;
 }
 
 #chooselist {
@@ -141,6 +141,7 @@ textarea:focus {
     float: left;
     border-color: transparent #d1d4cf #d1d4cf transparent;
     background-color: #eaebe9;
+    /* background-color: #e5fbcf; */
 }
 
 #friend_btn:hover {
@@ -153,6 +154,7 @@ textarea:focus {
     width: 50%;
     border-color: transparent transparent #d1d4cf transparent;
     background-color: #eaebe9;
+    /* background-color: #f3e5a1; */
 }
 
 #group_btn:hover {

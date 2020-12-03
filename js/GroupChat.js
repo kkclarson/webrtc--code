@@ -21,12 +21,15 @@ var chatConTmp = document.getElementById('chat_content'); //当前正在进行�
 var tmpChatCon;
 var data_input = document.querySelector('textarea#data_input');
 var groupMembersList = document.getElementById('groupmember');
+var isLookingFriendList = true;
 
 var name_input = "";
 var add_interface = document.getElementById('add_interface').innerHTML;
 var newFriendName = "";
 var newFriendId = "";
-var messageTable = new Array();
+var messageTable = new Array(); //记录未处理消息
+messageTable[0] = 0; //未处理消息数量
+var allMessageAmount = 0;
 
 var pc;
 var callerID;
@@ -70,8 +73,34 @@ var oharea = document.getElementById('hiddenarea');
 var ohact = document.getElementById('hiddenact');
 
 
+function checkID(elementID, friendBtnElement, groupBtnElement) {
+    var ele = document.getElementById(elementID);
+    var name = ele.value;
+    if (name == '') {
+        alert('Please input your id!');
+    } else {
+        var message = {
+            'parameters': {
+                'LogonID': name
+            }
+        };
+        $.ajax({
+            url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/GetCallerID/?id=' + JSON.stringify(message),
+            type: "GET",
+            dataType: 'json',
+            success: function(data) {
+                document.getElementById('login_interface').style.display = 'none';
+                getUserID(name, friendBtnElement, groupBtnElement);
+            },
+            error: function() {
+                console.log("Check ID Error!");
+                alert('Please input the right id!');
+            }
+        });
+    }
+}
 
-function getUserID(ID) {
+function getUserID(ID, e1, e2) {
     UserID = ID;
     console.log('Get user ID!', UserID);
     var message = { 'parameters': { 'LogonID': UserID } };
@@ -86,7 +115,7 @@ function getUserID(ID) {
             console.log("Check ID Error!");
         }
     });
-    onOpenApp();
+    onOpenApp(e1, e2);
     document.getElementById('login_interface').style.display = 'none';
     showMemberbtn.style.display = 'none';
 }
@@ -202,11 +231,10 @@ function addFriendChatRecordById(ID, message, bool) {
     }
 }
 
-function showGroup() {
+function showGroup(element1, element2) {
     console.log('Show groups!');
-    // document.getElementById('friend_btn').style.backgroundColor = '#eaebe9';
-    //document.getElementById('group_btn').style.backgroundColor = '#FFFFFF';
-    //checkMessageFromGroup();
+    isLookingFriendList = false;
+
     if (firstOpenGroupList) {
         //checkMessageFromGroup();
         var message = { "parameters": { "CallerName": UserID } };
@@ -239,6 +267,9 @@ function showGroup() {
             },
             error: function() {
                 console.log("Get groups Error!");
+                groupConList[i] = new Array();
+                friendAndGroupList.innerHTML = originalList;
+                checkMessageFromGroup();
             }
         });
     } else {
@@ -253,8 +284,11 @@ function showGroup() {
 }
 
 
-function showFriends() {
+function showFriends(element1, element2) {
+    document.getElementById(element1).style.backgroundColor = 'e5fbcf';
+
     console.log('First Show friends list!');
+    isLookingFriendList = true;
     if (firstOpenFriendList) {
         //checkMessageFromFriend();
         var message = { "parameters": { "LogonID": UserID } };
@@ -268,23 +302,41 @@ function showFriends() {
                 } else {
                     friendAmount = 0;
                     friendAndGroupList.innerHTML = originalList;
-                    for (var i = 0; i < data.root.row.length; i++) {
+                    console.log('Friend amount:', (data.root.row.length == undefined));
+                    if (data.root.row.length == undefined) {
                         firstOpenFriendList = false;
-                        var friendname = data.root.row[i].NickName;
+                        var friendname = data.root.row.NickName;
                         friendAmount++;
-                        friendConList[i] = new Array();
-                        friendConList[i][0] = friendname; //Friend name
-                        friendConList[i][1] = data.root.row[i].ID; //Friend ID
-                        friendConList[i][2] = ""; //Chat record
-                        var addFriendMsg = "<div class='fri_list' id = '" + data.root.row[i].Name + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + friendname + "</div> <button class = 'newmesbtn' id='" + friendname + "new" + "' style='padding: 0; display: none;'>n</button></div>";
+                        friendConList[0] = new Array();
+                        friendConList[0][0] = friendname; //Friend name
+                        friendConList[0][1] = data.root.row.ID; //Friend ID
+                        friendConList[0][2] = ""; //Chat record
+                        var addFriendMsg = "<div class='fri_list' id = '" + data.root.row.Name + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + friendname + "</div> <button class = 'newmesbtn' id='" + friendname + "new" + "' style='padding: 0; display: none;'>n</button></div>";
                         addFriendMsg = addFriendMsg.replace("\n", "<br>");
                         friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
+
+                    } else {
+                        for (var i = 0; i < data.root.row.length; i++) {
+                            firstOpenFriendList = false;
+                            var friendname = data.root.row[i].NickName;
+                            friendAmount++;
+                            friendConList[i] = new Array();
+                            friendConList[i][0] = friendname; //Friend name
+                            friendConList[i][1] = data.root.row[i].ID; //Friend ID
+                            friendConList[i][2] = ""; //Chat record
+                            var addFriendMsg = "<div class='fri_list' id = '" + data.root.row[i].Name + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + friendname + "</div> <button class = 'newmesbtn' id='" + friendname + "new" + "' style='padding: 0; display: none;'>n</button></div>";
+                            addFriendMsg = addFriendMsg.replace("\n", "<br>");
+                            friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
+                        }
                     }
                 }
                 checkMessageFromFriend();
             },
             error: function() {
                 console.log("Get friends Error!");
+                friendConList[i] = new Array();
+                friendAndGroupList.innerHTML = originalList;
+                checkMessageFromFriend();
             }
         });
     } else {
@@ -326,7 +378,7 @@ function showGroupMembers() {
                     if (isMyFriend) {
                         addFriendMsg = "<div class='frelist' id='frelist'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'> </div>   <div class='message'>" + data[i].cName + "</div> </div>";
                     } else {
-                        addFriendMsg = "<div class='frelist' id='frelist'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'> </div>   <div class='message'>" + data[i].cName + "</div><button id='addbtn' value='" + data[i].cName + "' onclick='addFriend(this.value)'>+</button> </div>";
+                        addFriendMsg = "<div class='frelist' id='frelist'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'> </div>   <div class='message'>" + data[i].cName + "</div><button id='addbtn' value='" + data[i].cName + "' onclick='sendAddFriendMessage(this.value)'>+</button> </div>";
                     }
                     addFriendMsg = addFriendMsg.replace("\n", "<br>");
                     groupMembersList.innerHTML = groupMembersList.innerHTML + addFriendMsg;
@@ -343,8 +395,8 @@ function showGroupMembers() {
     }
 }
 
-function onOpenApp() {
-    showFriends();
+function onOpenApp(e1, e2) {
+    showFriends(e1, e2);
     checkCalling();
     checkInvite();
 }
@@ -374,9 +426,16 @@ function checkInvite() {
                         } else if (data[i].message == 'addFriend') {
                             newFriendName = data[i].senderName;
                             newFriendId = data[i].senderID;
+                            messageTable[0]++;
+                            allMessageAmount++;
+                            messageTable[messageTable[0]] = new Array();
+                            messageTable[messageTable[0]][0] = newFriendId;
+                            messageTable[messageTable[0]][1] = newFriendName;
+                            messageTable[messageTable[0]][2] = 'addFriend';
+                            messageTable[messageTable[0]][3] = false; //是否已处理
                             document.getElementById('inviteMessageTips').src = "images/new_message.jpg";
                             var addFriendInvite = document.getElementById('reqlist');
-                            var addInvite = "<div class='frelist' id='inviterName" + data[i].senderName + "'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'> </div> <div class='message'>" + data[i].senderName + "</div> <button id='agreebtn' onclick='addFriend()'>接受</button> <button id='rejebtn'  onclick = 'refuseAddFriend()'>拒绝</button></div>";
+                            var addInvite = "<div class='frelist' id='inviterName" + data[i].senderName + "'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'> </div> <div class='message'>" + data[i].senderName + "</div> <button id='agreebtn' value='" + data[i].senderName + "' onclick='addFriend(this.value)'>接受</button> <button id='rejebtn' value='" + data[i].senderName + " onclick = 'refuseAddFriend(this.value)'>拒绝</button></div>";
                             addInvite = addInvite.replace("\n", "<br>");
                             addFriendInvite.innerHTML = addFriendInvite.innerHTML + addInvite;
                         } else if (data[i].message == 'answerVoiceChat') {
@@ -761,40 +820,95 @@ function sendAddFriendMessage(name) {
 
 }
 
-function addFriend() {
-    var message = { "parameters": { "CallerID": IDinDatabase, "FriendID": newFriendId } };
+function addFriend(name) {
+    for (var i = 1; i <= allMessageAmount; i++) {
+        if ((messageTable[i][1] == name) && (messageTable[i][2] == 'addFriend') && (!messageTable[i][3])) {
+            document.getElementById("inviterName" + name).style.display = 'none';
+            messageTable[0]--;
+        }
+    }
+    if (messageTable[0] == 0) {
+        document.getElementById('inviteMessageTips').src = "images/message.jpg";
+    }
+    var message0 = { 'parameters': { 'LogonID': name } };
     $.ajax({
-        url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/AddCallerFriend/?value=' + JSON.stringify(message),
-        type: "POST",
-        success: function() {
-            alert('Add friend success!');
-            console.log('Add friend success!');
-            friendConList[friendAmount] = new Array();
-            friendConList[friendAmount][0] = newFriendName; //Friend name
-            friendConList[friendAmount][1] = newFriendId; //Friend ID
-            friendConList[friendAmount][2] = ""; //Chat record
-            var addFriendMsg = "<div class='fri_list' id = '" + newFriendName + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + newFriendId + "</div> <button class = 'newmesbtn' id='" + newFriendId + "new" + "' style='padding: 0; display: none;'>n</button></div>";
-            addFriendMsg = addFriendMsg.replace("\n", "<br>");
-            friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
-            friendAmount++;
-            var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": newFriendId, "Message": "agreeAddFriend" } };
+        url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/GetCallerID/?id=' + JSON.stringify(message0),
+        type: "GET",
+        dataType: 'json',
+        success: function(data) {
+            var message = { "parameters": { "CallerID": IDinDatabase, "FriendID": data } };
             $.ajax({
-                url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
+                url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/AddCallerFriend/?value=' + JSON.stringify(message),
                 type: "POST",
-                dataType: 'json',
                 success: function() {
-                    console.log('Send add friend answer success!');
+                    alert('Add friend success!');
+                    console.log('Add friend success!');
+                    friendConList[friendAmount] = new Array();
+                    friendConList[friendAmount][0] = name; //Friend name
+                    friendConList[friendAmount][1] = data; //Friend ID
+                    friendConList[friendAmount][2] = ""; //Chat record
+                    if (isLookingFriendList) {
+                        var addFriendMsg = "<div class='fri_list' id = '" + newFriendName + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + newFriendId + "</div> <button class = 'newmesbtn' id='" + newFriendId + "new" + "' style='padding: 0; display: none;'>n</button></div>";
+                        addFriendMsg = addFriendMsg.replace("\n", "<br>");
+                        friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
+                    }
+                    friendAmount++;
+                    var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": newFriendId, "Message": "agreeAddFriend" } };
+                    $.ajax({
+                        url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
+                        type: "POST",
+                        dataType: 'json',
+                        success: function() {
+                            console.log('Send add friend answer success!');
+                        },
+                        error: function() {
+                            console.log("Send add friend answer Error!");
+                        }
+                    });
                 },
                 error: function() {
-                    console.log("Send add friend answer Error!");
+                    alert("Add friend Error!");
+                    console.log("Add friend Error!");
                 }
             });
         },
         error: function() {
-            alert("Add friend Error!");
-            console.log("Add friend Error!");
+            console.log("Check ID Error!");
         }
     });
+    // var message = { "parameters": { "CallerID": IDinDatabase, "FriendID": newFriendId } };
+    // $.ajax({
+    //     url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/AddCallerFriend/?value=' + JSON.stringify(message),
+    //     type: "POST",
+    //     success: function() {
+    //         alert('Add friend success!');
+    //         console.log('Add friend success!');
+    //         friendConList[friendAmount] = new Array();
+    //         friendConList[friendAmount][0] = newFriendName; //Friend name
+    //         friendConList[friendAmount][1] = newFriendId; //Friend ID
+    //         friendConList[friendAmount][2] = ""; //Chat record
+    //         var addFriendMsg = "<div class='fri_list' id = '" + newFriendName + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + newFriendId + "</div> <button class = 'newmesbtn' id='" + newFriendId + "new" + "' style='padding: 0; display: none;'>n</button></div>";
+    //         addFriendMsg = addFriendMsg.replace("\n", "<br>");
+    //         friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
+    //         friendAmount++;
+    //         var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": newFriendId, "Message": "agreeAddFriend" } };
+    //         $.ajax({
+    //             url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
+    //             type: "POST",
+    //             dataType: 'json',
+    //             success: function() {
+    //                 console.log('Send add friend answer success!');
+    //             },
+    //             error: function() {
+    //                 console.log("Send add friend answer Error!");
+    //             }
+    //         });
+    //     },
+    //     error: function() {
+    //         alert("Add friend Error!");
+    //         console.log("Add friend Error!");
+    //     }
+    // });
     // var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": newFriendId, "Message": "agreeAddFriend" } };
     // $.ajax({
     //     url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
@@ -817,28 +931,62 @@ function getAddFriendAnswer(bool, name, id) {
         friendConList[friendAmount][0] = name; //Friend name
         friendConList[friendAmount][1] = id; //Friend ID
         friendConList[friendAmount][2] = ""; //Chat record
-        var addFriendMsg = "<div class='fri_list' id = '" + name + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + name + "</div> <button class = 'newmesbtn' id='" + name + "new" + "' style='padding: 0; display: none;'>n</button></div>";
-        addFriendMsg = addFriendMsg.replace("\n", "<br>");
-        friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
+        if (isLookingFriendList) {
+            var addFriendMsg = "<div class='fri_list' id = '" + name + "' onclick='onClickFriendNameInList(this.id)'> <div class='image'> <img src='images/arrow.jpg' width='640' height='640' alt='picture'>  </div> <div class='message'>" + name + "</div> <button class = 'newmesbtn' id='" + name + "new" + "' style='padding: 0; display: none;'>n</button></div>";
+            addFriendMsg = addFriendMsg.replace("\n", "<br>");
+            friendAndGroupList.innerHTML = friendAndGroupList.innerHTML + addFriendMsg;
+        }
         friendAmount++;
     } else {
         alert("用户：" + name + "拒绝添加您为好友");
     }
 }
 
-function refuseAddFriend() {
-    var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": newFriendId, "Message": "refuseAddFriend" } };
+function refuseAddFriend(name) {
+    for (var i = 1; i <= allMessageAmount; i++) {
+        if ((messageTable[i][1] == name) && (messageTable[i][2] == 'addFriend') && (!messageTable[i][3])) {
+            document.getElementById("inviterName" + name).style.display = 'none';
+            messageTable[0]--;
+        }
+    }
+    if (messageTable[0] == 0) {
+        document.getElementById('inviteMessageTips').src = "images/message.jpg";
+    }
+    var message = { 'parameters': { 'LogonID': name } };
     $.ajax({
-        url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
-        type: "POST",
+        url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/GetCallerID/?id=' + JSON.stringify(message),
+        type: "GET",
         dataType: 'json',
-        success: function() {
-            console.log('Send add friend answer success!');
+        success: function(data) {
+            var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": data, "Message": "refuseAddFriend" } };
+            $.ajax({
+                url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
+                type: "POST",
+                dataType: 'json',
+                success: function() {
+                    console.log('Send add friend answer success!');
+                },
+                error: function() {
+                    console.log("Send add friend answer Error!");
+                }
+            });
         },
         error: function() {
-            console.log("Send add friend answer Error!");
+            console.log("Check ID Error!");
         }
     });
+    // var message_send = { "parameters": { "InviterID": IDinDatabase, "InviteeID": newFriendId, "Message": "refuseAddFriend" } };
+    // $.ajax({
+    //     url: 'http://ebarter3d-prod.cn-north-1.eb.amazonaws.com.cn/api/Call/InviteFriend?value=' + JSON.stringify(message_send),
+    //     type: "POST",
+    //     dataType: 'json',
+    //     success: function() {
+    //         console.log('Send add friend answer success!');
+    //     },
+    //     error: function() {
+    //         console.log("Send add friend answer Error!");
+    //     }
+    // });
 }
 
 
