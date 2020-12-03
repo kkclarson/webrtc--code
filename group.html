@@ -16,6 +16,9 @@
         <button id="ID_AA" value="AA" onclick="getUserID(this.value)">AA</button>
         <button id="ID_BB" value="BB" onclick="getUserID(this.value)">BB</button>
         <button id="ID_CC" value="CC" onclick="getUserID(this.value)">CC</button>
+        <button id="ID_A" class="Username" value="A" onclick="getUserID(this.value)">A</button>
+        <button id="ID_B" class="Username" value="B" onclick="getUserID(this.value)">B</button>
+        <button id="ID_C" class="Username" value="C" onclick="getUserID(this.value)">C</button>
     </div>
 
 
@@ -168,7 +171,7 @@
     </div>
     <div class="ser_style" id="ser_interface" style=" background-color: aliceblue;">
         <!-- "新添加"搜索圈内好友 -->
-        <div class='frelist' id='frelist'>
+        <div class='frelist' id='frelist' style="display: none;">
             <div class='image'>
                 <img src='images/arrow.jpg' width='640' height='640' alt='picture'>
             </div>
@@ -176,14 +179,14 @@
         </div>
     </div>
 
-    <div class="beadd_style" id="beadd_interface" style=" background-color: aliceblue; display: block">
+    <div class="beadd_style" id="beadd_interface" style=" background-color: aliceblue; display: none">
         <!-- "新添加"添加好友被请求界面 -->
         <button id="hidebtn" onclick="closeFrame('beadd_interface')">x</button>
         <h2>
             好友请求
         </h2>
         <div class='reqlist' id='reqlist'>
-            <div class='frelist' id='frelist'>
+            <div class='frelist' id='frelist' style="display: none;">
                 <div class='image'>
                     <img src='images/arrow.jpg' width='640' height='640' alt='picture'>
                 </div>
